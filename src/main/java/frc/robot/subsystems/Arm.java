@@ -22,32 +22,22 @@ public class Arm extends SubsystemBase {
   TalonFX BottomShootingMotor;
   TalonFX CentralShootingMotor;
   TalonFX TopShootingMotor;
-
-  PIDController AnglePID;
-
+ 
   DutyCycleEncoder AngleEncoder;
 
-  public double CurrentTicks;
-  public double CurrentAngle;
-  public double TargetAngle;
-
-  public double AngleVoltage;
-  public double BottomShootingVoltage;
-  public double CentralShootingVoltage;
-  public double TopShootingVoltage;
- 
-  public double CustomArmSpeed;
+  double CurrentTicks;
+  double CurrentAngle;
+  double TargetAngle;
  
   public Arm() {
  
+    // Motors
     AngleMotor = new TalonFX(Constants.CAN_IDs.AngleID,"FRC 1599");
     BottomShootingMotor = new TalonFX(Constants.CAN_IDs.BottomShootingID,"FRC 1599");
     CentralShootingMotor = new TalonFX(Constants.CAN_IDs.CentralShootingID,"FRC 1599");
     TopShootingMotor = new TalonFX(Constants.CAN_IDs.TopShootingID,"FRC 1599");
 
     AngleMotor.setNeutralMode(NeutralModeValue.Brake);
-
-    AnglePID = new PIDController(.03, 0, 0);
 
     AngleEncoder = new DutyCycleEncoder(6);
 
@@ -60,8 +50,6 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    AngleVoltage = AngleMotor.getSupplyVoltage().getValueAsDouble();
  
     if (AngleEncoder.getAbsolutePosition() < .2) {
 
@@ -74,29 +62,26 @@ public class Arm extends SubsystemBase {
     }
 
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 14;
-
-    SmartDashboard.getNumber("Angle Voltage", AngleVoltage);
-    SmartDashboard.putNumber("Angle Encoder Ticks", AngleEncoder.getAbsolutePosition());
+ 
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
     SmartDashboard.putNumber("Arm Speed", AnglePID.calculate(CurrentAngle, TargetAngle));
 
   }
-
-  public void RunAngle(double speed) {
-
-    AngleMotor.set(speed);
  
-  }
+  public void RunAngleWithLimits(double Speed) {
 
-  public void RunAngleWithLimits(double speed) {
+    if (Speed > 0 && CurrentAngle >= Constants.UpperArmLimit) {
 
+
+      
+    }
     AngleMotor.set(speed);
  
   }
 
   public void ChangeAngleThroughPID() {
 
-    RunAngleWithLimits(AnglePID.calculate(CurrentAngle, TargetAngle) );
+    RunAngleWithLimits(Constants.AnglePID.calculate(CurrentAngle, TargetAngle));
  
   }
 
@@ -106,11 +91,11 @@ public class Arm extends SubsystemBase {
 
   }
 
-  public void RunShooter(double speed) {
+  public void RunShooter(double Speed) {
  
-    BottomShootingMotor.set(-speed);
-    CentralShootingMotor.set(-speed);
-    TopShootingMotor.set(-speed);
+    BottomShootingMotor.set(-Speed);
+    CentralShootingMotor.set(-Speed);
+    TopShootingMotor.set(-Speed);
 
   }
 
@@ -119,37 +104,11 @@ public class Arm extends SubsystemBase {
     TopShootingMotor.set(-speed);
     CentralShootingMotor.set(-speed);
   }
-
-  public void SpinupAuto(double speed) {
  
-    CentralShootingMotor.set(-speed);
-  }
-
   public void RunBottom(double speed) {
 
     BottomShootingMotor.set(-speed);
 
   }
 
-
-  public void AnglePID(double Setpoint) {
-
-    AngleMotor.set(AnglePID.calculate(AngleEncoder.getAbsolutePosition(), Setpoint));
- 
-  }
-  
-  public boolean AreAngleMotorsGood(){
-
-    if (
-      AngleVoltage < 9) {
-
-        return false;
-
-      } else {
-
-        return true;
-
-      }
-  }
-  
 }

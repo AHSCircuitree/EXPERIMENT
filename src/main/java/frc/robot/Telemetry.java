@@ -1,15 +1,10 @@
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.BooleanPublisher;
 import edu.wpi.first.networktables.BooleanSubscriber;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -115,16 +110,9 @@ public class Telemetry {
             m_moduleSpeeds[i].setAngle(state.ModuleStates[i].angle);
             m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
             m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
-
-            SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
+ 
         }
 
-    }
-
-    public boolean IsRedAllience () {
-
-        return AllianceSub.get();
-        
     }
  
 }
