@@ -25,7 +25,6 @@ public class Arm extends SubsystemBase {
 
   double CurrentTicks;
   double CurrentAngle;
-  double TargetAngle;
  
   VelocityVoltage VelocityVolts;
  
@@ -53,7 +52,7 @@ public class Arm extends SubsystemBase {
     AngleEncoder = new DutyCycleEncoder(6);
 
     AngleEncoder.setPositionOffset(.828);
-  
+ 
   }
 
   @Override
@@ -72,7 +71,7 @@ public class Arm extends SubsystemBase {
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 14;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
-    
+ 
   }
 
   public double ReturnCurrentAngle() {
@@ -98,19 +97,7 @@ public class Arm extends SubsystemBase {
     }
  
   }
-
-  public void ChangeAngleThroughPID() {
-
-    RunAngleWithLimits(Constants.AnglePID.calculate(CurrentAngle, TargetAngle));
- 
-  }
-
-  public void ChangeTarget(double Target) {
-
-    TargetAngle = Target;
-
-  }
- 
+  
   public void Spinup(double Velocity) {
     
     TopShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));

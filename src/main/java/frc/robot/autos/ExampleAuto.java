@@ -23,6 +23,7 @@ public class ExampleAuto extends SequentialCommandGroup {
 
     addCommands(
 
+      InitialPose("CenterShoot", false),
       ChoreoPathing("CenterShoot", false),
       ChoreoPathing("CenterShoot2", false)
       
@@ -42,6 +43,20 @@ public class ExampleAuto extends SequentialCommandGroup {
       m_drivetrain
 
     );
+
+  }
+
+  private Command InitialPose(String Trajectory, boolean IsRed) {
+
+    if (IsRed = true) {
+
+      return m_drivetrain.runOnce(() -> m_drivetrain.seedFieldRelative(Choreo.getTrajectory(Trajectory).flipped().getInitialPose()));
+
+    } else {
+
+      return m_drivetrain.runOnce(() -> m_drivetrain.seedFieldRelative(Choreo.getTrajectory(Trajectory).getInitialPose()));
+
+    }
 
   }
 
