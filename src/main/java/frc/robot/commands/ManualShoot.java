@@ -13,9 +13,8 @@ public class ManualShoot extends Command {
   double m_currentVelocity;
   double m_targetVelocity;
 
-  Timer moveNoteDown;
-  Timer shootNote;
-  
+  Timer m_spinup;
+ 
   Arm m_arm;
 
   public ManualShoot(Arm Arm, double Velocity) {
@@ -23,9 +22,8 @@ public class ManualShoot extends Command {
     m_arm = Arm;
     m_targetVelocity = Velocity;
 
-    moveNoteDown = new Timer();
-    shootNote = new Timer();
-
+    m_spinup = new Timer();
+ 
     addRequirements(Arm);
     
   }
@@ -34,10 +32,11 @@ public class ManualShoot extends Command {
   @Override
   public void initialize() {
 
-    moveNoteDown.restart();
-    shootNote.stop();
-
+    m_spinup.restart();
+ 
     m_currentVelocity = m_arm.ReturnVelocity();
+
+    m_arm.RunBottom(0);
 
   }
 
@@ -47,29 +46,24 @@ public class ManualShoot extends Command {
 
     m_arm.Spinup(m_targetVelocity);
 
-    if (moveNoteDown.get() < .5) {
+    if (m_spinup.get() < .5) {
 
-      m_arm.RunBottom(-.1);
+      m_arm.RunBottom(-.2);
 
-    } else if (Math.abs(m_currentVelocity - m_targetVelocity) > 100) {
-
-      m_arm.RunBottom(0);
-
-    } else {
-
-      shootNote.restart();
-
-      m_arm.RunBottom(.2);
+    } if (m_spinup.get() > .5 && m_spinup.get() < 1) {
+ 
+      m_arm.Shoot(m_targetVelocity);
 
     }
-
+   
+ 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
 
-    m_arm.RunBottom(0);
+    m_arm.Shoot(0);
     m_arm.Spinup(0);
 
   }
@@ -78,7 +72,7 @@ public class ManualShoot extends Command {
   @Override
   public boolean isFinished() {
 
-    if (shootNote.get() > .5) {
+    if (m_spinup.get() > 1.2) {
 
       return true;
 

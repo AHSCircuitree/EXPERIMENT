@@ -25,7 +25,7 @@ public class RobotContainer {
  
   // Variables
   private static final double MaxSpeed = 5; // 6 meters per second desired top speed
-  private static final double MaxAngularRate = Math.PI; // Half a rotation per second max angular velocity
+  private static final double MaxAngularRate = 2 * Math.PI; // Half a rotation per second max angular velocity
  
   // Controllers
   private final CommandXboxController Player1 = new CommandXboxController(0);
@@ -55,11 +55,11 @@ public class RobotContainer {
     ));
 
     // Buttons
-    Player1.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), new Rotation2d(180)))));//James changed from Leftbumper 2/24/2024
-    Player1.a().whileTrue(new AutoArm(arm, 55));
-    Player1.x().whileTrue(new AutoArm(arm, -55));
-    Player1.leftTrigger().whileTrue(new ManualIntake(intake, arm, 9000));
-    Player1.rightTrigger().whileTrue(new ManualShoot(arm, 9000));
+    Player1.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), new Rotation2d(135)))));//James changed from Leftbumper 2/24/2024
+    Player1.a().onTrue(new AutoArm(arm, 68));
+    Player1.x().onTrue(new AutoArm(arm, 0));
+    Player1.leftTrigger().whileTrue(new ManualIntake(intake, arm, 45));
+    Player1.rightTrigger().whileTrue(new ManualShoot(arm, 60));
 
     // Registers the Telemetry
     drivetrain.registerTelemetry(logger::telemeterize);

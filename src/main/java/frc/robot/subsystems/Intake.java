@@ -48,8 +48,8 @@ public class Intake extends SubsystemBase {
   public void RunIntake(double Velocity) {
  
     FrontIntakeMotor.setControl(VelocityVolts.withVelocity(Velocity));
-    FrontFlyMotor.set(1);
-    RearFlyMotor.set(1);
+    FrontFlyMotor.set(Velocity);
+    RearFlyMotor.set(Velocity);
  
   }
 

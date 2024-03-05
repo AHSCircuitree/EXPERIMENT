@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -27,6 +28,8 @@ public class Arm extends SubsystemBase {
   double CurrentAngle;
  
   VelocityVoltage VelocityVolts;
+
+  public CANdle candle;
  
   public Arm() {
  
@@ -35,6 +38,11 @@ public class Arm extends SubsystemBase {
     BottomShootingMotor = new TalonFX(Constants.CAN_IDs.BottomShootingID,"FRC 1599");
     CentralShootingMotor = new TalonFX(Constants.CAN_IDs.CentralShootingID,"FRC 1599");
     TopShootingMotor = new TalonFX(Constants.CAN_IDs.TopShootingID,"FRC 1599");
+
+    candle = new CANdle(52, "FRC 1599");
+
+    TopShootingMotor.setNeutralMode(NeutralModeValue.Coast);
+    CentralShootingMotor.setNeutralMode(NeutralModeValue.Coast);
 
     VelocityVolts = new VelocityVoltage(0);
 
@@ -46,6 +54,8 @@ public class Arm extends SubsystemBase {
 
     TopShootingMotor.getConfigurator().apply(VelocityConfig, 0.050);
     CentralShootingMotor.getConfigurator().apply(VelocityConfig, 0.050);
+
+    TopShootingMotor.setInverted(true);
 
     AngleMotor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -68,7 +78,9 @@ public class Arm extends SubsystemBase {
 
     }
 
-    CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 14;
+    candle.setLEDs(255, 0, 0);
+
+    CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 6;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
  
@@ -82,27 +94,31 @@ public class Arm extends SubsystemBase {
  
   public void RunAngleWithLimits(double Speed) {
 
-    if (Speed < 0 && CurrentAngle >= Constants.UpperArmLimit) {
-
-      AngleMotor.set(0);
-      
-    } else if (Speed > 0 && CurrentAngle <= Constants.LowerArmLimit) {
-
-      AngleMotor.set(0);
-      
-    } else {
-
-      AngleMotor.set(Speed);
-
-    }
+   
+    AngleMotor.set(-Speed);
+ 
  
   }
   
   public void Spinup(double Velocity) {
     
     TopShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
+ 
+  }
+
+  public void Shoot(double Velocity) {
+
     CentralShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
-    
+    if (Velocity == 0) {
+
+      BottomShootingMotor.set(0);
+
+    } else {
+
+      BottomShootingMotor.set(.2);
+
+    }
+
   }
 
   public double ReturnVelocity() {
@@ -114,7 +130,7 @@ public class Arm extends SubsystemBase {
  
   public void RunBottom(double speed) {
 
-    BottomShootingMotor.set(-speed);
+    BottomShootingMotor.set(speed);
 
   }
 
