@@ -4,13 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.PIDController;
+ 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +27,8 @@ public class Arm extends SubsystemBase {
   double CurrentAngle;
   double TargetAngle;
  
+  VelocityVoltage VelocityVolts;
+ 
   public Arm() {
  
     // Motors
@@ -37,15 +37,23 @@ public class Arm extends SubsystemBase {
     CentralShootingMotor = new TalonFX(Constants.CAN_IDs.CentralShootingID,"FRC 1599");
     TopShootingMotor = new TalonFX(Constants.CAN_IDs.TopShootingID,"FRC 1599");
 
+    VelocityVolts = new VelocityVoltage(0);
+
+    var VelocityConfig = new Slot0Configs();
+    VelocityConfig.kV = 0.12;
+    VelocityConfig.kP = 0.11;
+    VelocityConfig.kI = 0.48;
+    VelocityConfig.kD = 0.01;
+
+    TopShootingMotor.getConfigurator().apply(VelocityConfig, 0.050);
+    CentralShootingMotor.getConfigurator().apply(VelocityConfig, 0.050);
+
     AngleMotor.setNeutralMode(NeutralModeValue.Brake);
 
     AngleEncoder = new DutyCycleEncoder(6);
 
     AngleEncoder.setPositionOffset(.828);
- 
-    SmartDashboard.putNumber("Custom Angle", 0);
-    SmartDashboard.putNumber("Custom Speed",0);
- 
+  
   }
 
   @Override
@@ -64,18 +72,30 @@ public class Arm extends SubsystemBase {
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 14;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
-    SmartDashboard.putNumber("Arm Speed", AnglePID.calculate(CurrentAngle, TargetAngle));
+    
+  }
+
+  public double ReturnCurrentAngle() {
+
+    return CurrentAngle;
 
   }
  
   public void RunAngleWithLimits(double Speed) {
 
-    if (Speed > 0 && CurrentAngle >= Constants.UpperArmLimit) {
+    if (Speed < 0 && CurrentAngle >= Constants.UpperArmLimit) {
 
-
+      AngleMotor.set(0);
       
+    } else if (Speed > 0 && CurrentAngle <= Constants.LowerArmLimit) {
+
+      AngleMotor.set(0);
+      
+    } else {
+
+      AngleMotor.set(Speed);
+
     }
-    AngleMotor.set(speed);
  
   }
 
@@ -90,19 +110,19 @@ public class Arm extends SubsystemBase {
     TargetAngle = Target;
 
   }
-
-  public void RunShooter(double Speed) {
  
-    BottomShootingMotor.set(-Speed);
-    CentralShootingMotor.set(-Speed);
-    TopShootingMotor.set(-Speed);
-
+  public void Spinup(double Velocity) {
+    
+    TopShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
+    CentralShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
+    
   }
 
-  public void Spinup(double speed) {
+  public double ReturnVelocity() {
 
-    TopShootingMotor.set(-speed);
-    CentralShootingMotor.set(-speed);
+    return ( TopShootingMotor.getVelocity().getValueAsDouble() + 
+    CentralShootingMotor.getVelocity().getValueAsDouble() ) / 2;
+
   }
  
   public void RunBottom(double speed) {

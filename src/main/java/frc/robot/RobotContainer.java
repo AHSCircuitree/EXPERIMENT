@@ -3,16 +3,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-
-import com.choreo.lib.Choreo;
+ 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+ 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.ChoreoPath;
+import frc.robot.autos.ExampleAuto;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -21,7 +18,7 @@ public class RobotContainer {
   //wbecol;vb edwo;lujdbvw oeWSB 
 
   // Variables
-  private static final double MaxSpeed = 3; // 6 meters per second desired top speed
+  private static final double MaxSpeed = 5; // 6 meters per second desired top speed
   private static final double MaxAngularRate = Math.PI; // Half a rotation per second max angular velocity
  
   // Controllers
@@ -51,6 +48,9 @@ public class RobotContainer {
         .withRotationalRate((-Player1.getRightX() * MaxAngularRate)) 
     ));
 
+    // Buttons
+    
+
     // Registers the Telemetry
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -65,7 +65,7 @@ public class RobotContainer {
   //Field Orientation Reset
   public Command getAutonomousCommand() {
 
-    return new ChoreoPath(drivetrain, "CenterShoot", true);
+    return new ExampleAuto(drivetrain);
     
   }
 
