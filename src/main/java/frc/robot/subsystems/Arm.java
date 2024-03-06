@@ -28,8 +28,6 @@ public class Arm extends SubsystemBase {
   double CurrentAngle;
  
   VelocityVoltage VelocityVolts;
-
-  public CANdle candle;
  
   public Arm() {
  
@@ -38,9 +36,7 @@ public class Arm extends SubsystemBase {
     BottomShootingMotor = new TalonFX(Constants.CAN_IDs.BottomShootingID,"FRC 1599");
     CentralShootingMotor = new TalonFX(Constants.CAN_IDs.CentralShootingID,"FRC 1599");
     TopShootingMotor = new TalonFX(Constants.CAN_IDs.TopShootingID,"FRC 1599");
-
-    candle = new CANdle(52, "FRC 1599");
-
+ 
     TopShootingMotor.setNeutralMode(NeutralModeValue.Coast);
     CentralShootingMotor.setNeutralMode(NeutralModeValue.Coast);
 
@@ -77,9 +73,7 @@ public class Arm extends SubsystemBase {
       CurrentTicks = AngleEncoder.getAbsolutePosition();
 
     }
-
-    candle.setLEDs(255, 0, 0);
-
+ 
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 6;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);

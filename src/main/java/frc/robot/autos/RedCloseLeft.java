@@ -11,27 +11,29 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.AlwaysRunningIntake;
 import frc.robot.commands.AutoArm;
+import frc.robot.commands.ManualShoot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
-public class ExampleAuto extends SequentialCommandGroup {
+public class RedCloseLeft extends SequentialCommandGroup {
   
   Drivetrain m_drivetrain;
-  Arm m_arm;
 
-  public ExampleAuto(Drivetrain Drivetrain, Arm Arm) {
+  public RedCloseLeft(Drivetrain Drivetrain, Arm Arm, Intake Intake) {
   
     m_drivetrain = Drivetrain;
-    m_arm = Arm;
 
     addCommands(
 
-      InitialPose("CenterShoot", false),
-      ChoreoPathing("CenterShoot", false),
-      new AutoArm(m_arm, 68),
-      ChoreoPathing("CenterShoot2", false)
-      
+      new ManualShoot(Arm, 70),
+      InitialPose("CloseLeft", true),
+      new AlwaysRunningIntake(Intake, Arm, 30).withTimeout(.1),
+      ChoreoPathing("CloseLeft", true),
+      new ManualShoot(Arm, 70)
+     
     );
 
   }
