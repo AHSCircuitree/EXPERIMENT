@@ -20,6 +20,9 @@ import frc.robot.autos.BlueCenterStealMiddle;
 import frc.robot.autos.BlueCloseLeft;
 import frc.robot.autos.BlueCloseLeftStealLeft;
 import frc.robot.autos.BlueCloseLeftStealLeftLineupLeft;
+import frc.robot.autos.BlueLeftJustMove;
+import frc.robot.autos.BlueRightJustMove;
+import frc.robot.autos.BlueRightMoveAndSteal;
 import frc.robot.autos.ExampleAuto;
 import frc.robot.autos.RedCenterShoot1;
 import frc.robot.autos.RedCenterShootMiddle4;
@@ -27,6 +30,8 @@ import frc.robot.autos.RedCenterStealMiddle;
 import frc.robot.autos.RedCloseLeft;
 import frc.robot.autos.RedCloseLeftStealLeft;
 import frc.robot.autos.RedCloseLeftStealLeftLineupLeft;
+import frc.robot.autos.RedLeftJustMove;
+import frc.robot.autos.RedRightJustMove;
 import frc.robot.commands.AutoArm;
 import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ManualShoot;
@@ -97,6 +102,11 @@ public class RobotContainer {
     AutoSelect.addOption("Red Close Left and Steal Left", new RedCloseLeftStealLeft(drivetrain,arm,intake));
     AutoSelect.addOption("Blue Center Shoot 1", new BlueCenterShoot1(drivetrain,arm,intake));
     AutoSelect.addOption("Red Center Shoot 1", new RedCenterShoot1(drivetrain,arm,intake));
+    AutoSelect.addOption("Blue Right Just Move", new BlueRightJustMove(drivetrain,arm,intake));
+    AutoSelect.addOption("Red Right Just Move", new RedRightJustMove(drivetrain,arm,intake));
+    AutoSelect.addOption("Red Left Just Move", new RedLeftJustMove(drivetrain,arm,intake));
+    AutoSelect.addOption("Blue Left Just Move", new BlueLeftJustMove(drivetrain,arm,intake));
+      AutoSelect.addOption("Blue Right Move and Steal", new BlueRightMoveAndSteal(drivetrain,arm,intake));
     SmartDashboard.putData("Select Auto", AutoSelect);
 
   }

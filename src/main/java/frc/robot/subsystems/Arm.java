@@ -28,6 +28,8 @@ public class Arm extends SubsystemBase {
   double CurrentAngle;
  
   VelocityVoltage VelocityVolts;
+
+  public CANdle candle;
  
   public Arm() {
  
@@ -58,6 +60,8 @@ public class Arm extends SubsystemBase {
     AngleEncoder = new DutyCycleEncoder(6);
 
     AngleEncoder.setPositionOffset(.828);
+
+    candle = new CANdle(52, "FRC 1599");
  
   }
 
@@ -73,7 +77,9 @@ public class Arm extends SubsystemBase {
       CurrentTicks = AngleEncoder.getAbsolutePosition();
 
     }
- 
+
+    candle.setLEDs(0, 255, 0);
+
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 6;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
