@@ -22,15 +22,15 @@ public class RedLeftJustMove extends SequentialCommandGroup {
   
   Drivetrain m_drivetrain;
 
-  public RedRightJustMove(Drivetrain Drivetrain, Arm Arm, Intake Intake) {
+  public RedLeftJustMove(Drivetrain Drivetrain, Arm Arm, Intake Intake) {
   
     m_drivetrain = Drivetrain;
 
     addCommands(
 
       new ManualShoot(Arm, 70),
-      InitialPose("RightJustMove", true),
-      ChoreoPathing("RightJustMove", true)
+      InitialPose("LeftJustMove", true),
+      ChoreoPathing("LeftJustMove", true)
    
      
     );

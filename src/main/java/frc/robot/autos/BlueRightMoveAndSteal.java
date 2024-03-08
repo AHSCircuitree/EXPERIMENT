@@ -22,16 +22,17 @@ public class BlueRightMoveAndSteal extends SequentialCommandGroup {
   
   Drivetrain m_drivetrain;
 
-  public BlueCloseLeft(Drivetrain Drivetrain, Arm Arm, Intake Intake) {
+  public BlueRightMoveAndSteal(Drivetrain Drivetrain, Arm Arm, Intake Intake) {
   
     m_drivetrain = Drivetrain;
 
     addCommands(
 
       new ManualShoot(Arm, 70),
-      InitialPose("CloseLeft", false),
+      InitialPose("RightJustMove", false),
+      ChoreoPathing("RightJustMove", false),
       new AlwaysRunningIntake(Intake, Arm, 30).withTimeout(.1),
-      ChoreoPathing("CloseLeft", false),
+      ChoreoPathing("LineupRight", false),
       new ManualShoot(Arm, 70)
      
     );

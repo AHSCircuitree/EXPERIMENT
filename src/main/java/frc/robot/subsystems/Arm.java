@@ -28,8 +28,6 @@ public class Arm extends SubsystemBase {
   double CurrentAngle;
  
   VelocityVoltage VelocityVolts;
-
-  public CANdle candle;
  
   public Arm() {
  
@@ -54,6 +52,7 @@ public class Arm extends SubsystemBase {
     CentralShootingMotor.getConfigurator().apply(VelocityConfig, 0.050);
 
     TopShootingMotor.setInverted(true);
+    CentralShootingMotor.setInverted(true);
 
     AngleMotor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -61,8 +60,6 @@ public class Arm extends SubsystemBase {
 
     AngleEncoder.setPositionOffset(.828);
 
-    candle = new CANdle(52, "FRC 1599");
- 
   }
 
   @Override
@@ -77,9 +74,7 @@ public class Arm extends SubsystemBase {
       CurrentTicks = AngleEncoder.getAbsolutePosition();
 
     }
-
-    candle.setLEDs(0, 255, 0);
-
+ 
     CurrentAngle = -(CurrentTicks / (.072 / 28) - 328) - 6;
  
     SmartDashboard.putNumber("Angle Encoder Degrees", CurrentAngle);
@@ -108,6 +103,7 @@ public class Arm extends SubsystemBase {
 
   public void Shoot(double Velocity) {
 
+    TopShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
     CentralShootingMotor.setControl(VelocityVolts.withVelocity(Velocity));
     if (Velocity == 0) {
 

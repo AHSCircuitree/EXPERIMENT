@@ -33,11 +33,13 @@ import frc.robot.autos.RedCloseLeftStealLeftLineupLeft;
 import frc.robot.autos.RedLeftJustMove;
 import frc.robot.autos.RedRightJustMove;
 import frc.robot.commands.AutoArm;
+import frc.robot.commands.ManualHooks;
 import frc.robot.commands.ManualIntake;
 import frc.robot.commands.ManualShoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Hooks;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightHelpers;
 
@@ -55,7 +57,8 @@ public class RobotContainer {
   private final Drivetrain drivetrain = TunerConstants.DriveTrain;  
   private final Arm arm = new Arm();
   private final Intake intake = new Intake();
- 
+  private final Hooks hooks = new Hooks();
+
   // Objects for Tele-op Drive
   public SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.03).withRotationalDeadband(MaxAngularRate * 0.05) // Small deadband
@@ -80,12 +83,16 @@ public class RobotContainer {
     Player1.a().onTrue(new AutoArm(arm, 68));
     Player1.x().onTrue(new AutoArm(arm, 0));
     Player1.leftTrigger().whileTrue(new ManualIntake(intake, arm, 45)); //Rotations per second
-    Player1.rightTrigger().whileTrue(new ManualShoot(arm, 60));
+    Player1.rightTrigger().whileTrue(new ManualShoot(arm, 120));
     Player1.leftBumper().whileTrue( 
         drivetrain.applyRequest(() -> driveFieldCentric
-        .withVelocityX(1.5)  
+        .withVelocityX(-1.5)  
         .withVelocityY(0) 
         .withRotationalRate(-LimelightHelpers.getTX("limelight-sh") / 14)));
+    Player1.povUp().whileTrue(new ManualHooks(hooks, .5));
+    Player1.povDown().whileTrue(new ManualHooks(hooks, -.5));
+
+
     // Registers the Telemetry
     drivetrain.registerTelemetry(logger::telemeterize);
 

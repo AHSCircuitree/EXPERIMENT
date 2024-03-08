@@ -29,10 +29,9 @@ public class BlueLeftJustMove extends SequentialCommandGroup {
     addCommands(
 
       new ManualShoot(Arm, 70),
-      InitialPose("CloseLeft", false),
-      new AlwaysRunningIntake(Intake, Arm, 30).withTimeout(.1),
-      ChoreoPathing("CloseLeft", false),
-      new ManualShoot(Arm, 70)
+      InitialPose("LeftJustMove", false),
+      ChoreoPathing("LeftJustMOve", false)
+      
      
     );
 

@@ -46,11 +46,11 @@ public class ManualShoot extends Command {
 
     m_arm.Spinup(m_targetVelocity);
 
-    if (m_spinup.get() < .5) {
+    if (m_spinup.get() < .2) {
 
-      m_arm.RunBottom(-.2);
+      m_arm.RunBottom(-.03);
 
-    } if (m_spinup.get() > .5 && m_spinup.get() < 1) {
+    } if (m_spinup.get() > .2 && m_spinup.get() < .8) {
  
       m_arm.Shoot(m_targetVelocity);
 
